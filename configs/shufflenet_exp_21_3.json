@@ -1,0 +1,59 @@
+{
+    "name": "shufflenet_exp_21_3",
+    "gpu_device":[3],
+    "project_root": "/root/userfolder/Anemia_Screen/",
+
+    "arch": {
+        "type": "shuffleV1",
+        "args": {
+            "model_size": "0.25x",
+            "in_channels": 1,
+            "group": 2,
+            "n_class": 1
+        }
+    },
+    "data_loader": {
+        "type": "VesselOCTClaDataLoader",
+        "args":{
+            "mode": "train",
+            "data_root": "/root/userfolder/Dataset/ImagesAnnotations_aug/",
+            "fold": 0,
+            "num_workers": 4,
+            "batch_size": 96
+        }
+    },
+    "optimizer": {
+        "type": "SGD",
+        "args":{
+            "lr": 0.01,
+            "momentum": 0.9,
+            "weight_decay": 1e-4,
+            "nesterov": true
+        }
+    },
+    "loss": "bce",
+    "metrics": [
+        "get_accuracy_sklearn", "get_recall_sklearn", "get_specificity", "get_auc_sklearn"
+    ],
+    "lr_scheduler": {
+        "type": "StepLR",
+        "args": {
+            "step_size": 100,
+            "gamma": 0.1
+        }
+    },
+    "trainer": {
+        "epochs": 201,
+
+        "save_dir": "experiments_saved/",
+        "save_period": 200,
+        "verbosity": 2,
+
+        "monitor": "max val_get_accuracy_sklearn",
+        "early_stop": 40,
+
+        "tensorboard": true,
+        "resume": false,
+        "resume_path": "experiments_saved/models/shufflenet_exp_21_3/0528_105543/model_best.pth"
+    }
+}
